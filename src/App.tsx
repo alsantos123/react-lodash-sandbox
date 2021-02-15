@@ -1,6 +1,6 @@
-import * as util from "util";
-import * as _ from "lodash";
 import React from "react";
+import * as _ from "lodash";
+import * as util from "util";
 
 import "./styles.css";
 
@@ -16,8 +16,10 @@ export default function App() {
 
   React.useEffect(() => {
     // onLoad
-    setOrdered(groupBy(dataSet));
-    setOutput(util.inspect(ordered, true, 4, false));
+    const ordenado = groupBy(dataSet);
+    setOrdered(ordenado);
+
+    setOutput(util.inspect(ordenado, true, 4, false));
 
     console.log("ordenou => ", ordered);
   }, []);
@@ -66,8 +68,11 @@ function DrawListaOrdenados(props: { ordered: null | any }) {
               <li>
                 {item}
                 <ul>
-                  {ordered[item].map((itemFilho: any) => (
-                    <li>{itemFilho.Titulo}</li>
+                  {ordered[item].map((itemFilho: IProduto) => (
+                    <li>
+                      <b>{itemFilho.Titulo}</b> - R${" "}
+                      {itemFilho.Preco.toFixed(2)}
+                    </li>
                   ))}
                 </ul>
               </li>
@@ -82,8 +87,9 @@ function DrawListaOrdenados(props: { ordered: null | any }) {
 /**
  * Função para agrupar o dataSet em Categorias.
  * @param dataSet
+ * @returns um dicionario onde a chave é a string do grupo e o value é uma lista de IProduto[]
  */
-function groupBy(dataSet: any) {
+function groupBy(dataSet: IProduto[]): any {
   console.log("pass fnOrdenarDataset()");
   return _.groupBy(dataSet, "Categoria");
 }
@@ -98,9 +104,9 @@ interface IProduto {
   Preco: number;
   Descricao?: string;
 
-  AeronaveTipo?: string;
+  AeronaveTipo?: string | null;
   Categoria: string;
-  FotoDestaque?: string;
+  FotoDestaque?: string | null;
 
   Adicionais: IProduto_Adicional[];
   TermoResponsa?: string;
@@ -116,7 +122,7 @@ interface IProduto_Adicional {
   Id: number;
   Vid: number;
   Titulo: string;
-  Foto: string;
+  Foto: string | null;
   Preco: number;
 }
 
