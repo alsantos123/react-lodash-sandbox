@@ -16,12 +16,13 @@ export default function App() {
 
   React.useEffect(() => {
     // onLoad
-    const ordenado = groupBy(dataSet);
-    setOrdered(ordenado);
+    const agrupado = groupBy(dataSet);
+    setOrdered(agrupado);
 
-    setOutput(util.inspect(ordenado, true, 4, false));
+    setOutput(util.inspect(agrupado, true, 4, false));
 
-    console.log("ordenou => ", ordenado);
+    console.log("dataset => ", dataSet);
+    console.log("agrupado => ", agrupado);
   }, []);
 
   React.useMemo(() => {
