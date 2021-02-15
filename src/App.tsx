@@ -21,7 +21,7 @@ export default function App() {
 
     setOutput(util.inspect(ordenado, true, 4, false));
 
-    console.log("ordenou => ", ordered);
+    console.log("ordenou => ", ordenado);
   }, []);
 
   React.useMemo(() => {
@@ -65,13 +65,12 @@ function DrawListaOrdenados(props: { ordered: null | any }) {
             const gruposAsc = _.orderBy(grupos, undefined, "desc");
 
             return gruposAsc.map((item) => (
-              <li>
+              <li key={item}>
                 {item}
                 <ul>
-                  {ordered[item].map((itemFilho: IProduto) => (
-                    <li>
-                      <b>{itemFilho.Titulo}</b> - R${" "}
-                      {itemFilho.Preco.toFixed(2)}
+                  {ordered[item].map((produto: IProduto) => (
+                    <li key={produto.Id}>
+                      <b>{produto.Titulo}</b> - R$ {produto.Preco.toFixed(2)}
                     </li>
                   ))}
                 </ul>
@@ -90,7 +89,7 @@ function DrawListaOrdenados(props: { ordered: null | any }) {
  * @returns um dicionario onde a chave é a string do grupo e o value é uma lista de IProduto[]
  */
 function groupBy(dataSet: IProduto[]): any {
-  console.log("pass fnOrdenarDataset()");
+  console.log("passou no groupBy()");
   return _.groupBy(dataSet, "Categoria");
 }
 
