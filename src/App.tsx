@@ -16,7 +16,7 @@ export default function App() {
   ///
   const [redraws, setRedraws] = React.useState(0);
   const [output, setOutput] = React.useState("");
-  const [ordered, setOrdered] = React.useState<null | any>(null);
+  const [agrupado, setAgrupado] = React.useState<null | any>(null);
 
   console.log(redraws);
 
@@ -26,7 +26,7 @@ export default function App() {
   React.useEffect(() => {
     // onLoad
     const agrupado = groupBy(dataSet);
-    setOrdered(agrupado);
+    setAgrupado(agrupado);
 
     setOutput(util.inspect(dataSet, true, 4, false));
 
@@ -54,9 +54,13 @@ export default function App() {
       >
         Redraw
       </button>
-      <DrawListaOrdenados ordered={ordered} />
+      <hr />
+      Agrupados:
+      <DrawListaOrdenados ordered={agrupado} />
+      <hr />
+      Material-UI:
       <AutoComplete lstProdutos={dataSet} />
-      <br />
+      <hr />
       Dataset:
       <pre>{output}</pre>
     </div>
