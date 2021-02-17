@@ -5,3 +5,15 @@
 h1 {
   text-align: center;
 }
+
+.MuiAutocomplete-popper {
+  background: green !important;
+}
+
+.MuiAutocomplete-paper {
+  background: purple !important;
+}
+
+.MuiAutocomplete-groupLabel {
+  background: green !important;
+}

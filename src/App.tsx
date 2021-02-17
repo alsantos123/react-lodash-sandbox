@@ -2,24 +2,33 @@ import React from "react";
 import * as _ from "lodash";
 import * as util from "util";
 
+import { TextField } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+
 import "./styles.css";
 
 /**
  * Componente React principal
  */
 export default function App() {
+  ///
+  /// States
+  ///
   const [redraws, setRedraws] = React.useState(0);
   const [output, setOutput] = React.useState("");
   const [ordered, setOrdered] = React.useState<null | any>(null);
 
   console.log(redraws);
 
+  ///
+  /// useEffect() vs useMemo()
+  ///
   React.useEffect(() => {
     // onLoad
     const agrupado = groupBy(dataSet);
     setOrdered(agrupado);
 
-    setOutput(util.inspect(agrupado, true, 4, false));
+    setOutput(util.inspect(dataSet, true, 4, false));
 
     console.log("dataset => ", dataSet);
     console.log("agrupado => ", agrupado);
@@ -32,10 +41,12 @@ export default function App() {
     // console.log("ordenou => ", ordered);
   }, []);
 
+  ///
+  /// Render
+  ///
   return (
     <div className="App">
       <h1>Redraws: {redraws} </h1>
-
       <button
         onClick={() => {
           setRedraws(redraws + 1);
@@ -43,9 +54,10 @@ export default function App() {
       >
         Redraw
       </button>
-
       <DrawListaOrdenados ordered={ordered} />
-
+      <AutoComplete lstProdutos={dataSet} />
+      <br />
+      Dataset:
       <pre>{output}</pre>
     </div>
   );
@@ -55,21 +67,21 @@ export default function App() {
  * Componente React secundário
  */
 function DrawListaOrdenados(props: { ordered: null | any }) {
-  const ordered = props.ordered;
+  const dataset = props.ordered;
 
   return (
     <div>
-      {ordered ? (
+      {dataset ? (
         <ul>
           {(() => {
-            const grupos = _.keys(ordered);
+            const grupos = _.keys(dataset);
             const gruposAsc = _.orderBy(grupos, undefined, "desc");
 
             return gruposAsc.map((item) => (
               <li key={item}>
                 {item}
                 <ul>
-                  {ordered[item].map((produto: IProduto) => (
+                  {dataset[item].map((produto: IProduto) => (
                     <li key={produto.Id}>
                       <b>{produto.Titulo}</b> - R$ {produto.Preco.toFixed(2)}
                     </li>
@@ -81,6 +93,41 @@ function DrawListaOrdenados(props: { ordered: null | any }) {
         </ul>
       ) : null}
     </div>
+  );
+}
+
+function AutoComplete(props: { lstProdutos: IProduto[] }) {
+  const [selecionados, setSelecionados] = React.useState<IProduto[]>([]);
+  return (
+    <Autocomplete
+      id="produtos"
+      fullWidth
+      value={selecionados}
+      multiple={true}
+      limitTags={-1}
+      options={props.lstProdutos}
+      groupBy={(option: IProduto) => option.Categoria}
+      getOptionLabel={(option: IProduto) => option.Titulo}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          label="Selecione"
+          placeholder="clique aqui"
+        />
+      )}
+      onChange={(event, produtos) => {
+        // console.log(event);
+        // console.log(produtos)
+        // setLstProdutosSelecionados(produtos);
+        // carrinho.Add(produto);
+        setSelecionados(produtos);
+        console.log(produtos);
+        // if (produto) {
+        //   selecionados.push(produto);
+        // }
+      }}
+    />
   );
 }
 
@@ -104,6 +151,7 @@ interface IProduto {
   Preco: number;
   Descricao?: string;
 
+  Aeroporto?: any | null;
   AeronaveTipo?: string | null;
   Categoria: string;
   FotoDestaque?: string | null;
